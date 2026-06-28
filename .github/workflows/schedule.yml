@@ -27,5 +27,5 @@ jobs:
       - name: Start pool robot
         env:
           DOLPHIN_EMAIL: ${{ secrets.DOLPHIN_EMAIL }}
-          DOLPHIN_PASSWORD: ${{ secrets.DOLPHIN_PASSWORD }}
+          DOLPHIN_REFRESH_TOKEN: ${{ secrets.DOLPHIN_REFRESH_TOKEN }}
         run: python dolphin_start.py

@@ -1,0 +1,31 @@
+name: Run Dolphin Pool Robot
+
+on:
+  schedule:
+    # Runs at 8:00 AM and 4:00 PM Eastern Time (UTC-4 in summer, UTC-5 in winter)
+    # GitHub Actions uses UTC — adjust these if your timezone differs
+    - cron: '0 12 * * *'   # 8:00 AM ET (UTC-4)
+    - cron: '0 20 * * *'   # 4:00 PM ET (UTC-4)
+  workflow_dispatch:        # allows you to trigger it manually from GitHub UI
+
+jobs:
+  start-robot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Start pool robot
+        env:
+          DOLPHIN_EMAIL: ${{ secrets.DOLPHIN_EMAIL }}
+          DOLPHIN_PASSWORD: ${{ secrets.DOLPHIN_PASSWORD }}
+        run: python dolphin_start.py

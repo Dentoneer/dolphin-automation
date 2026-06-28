@@ -71,13 +71,17 @@ def refresh_id_token(refresh_token: str) -> str:
 
 def login(email: str, id_token: str) -> tuple[str, str]:
     """Returns (api_token, robot_serial_number)."""
-    log.info("Logging in to Maytronics API...")
+    if not email:
+        raise RuntimeError("DOLPHIN_EMAIL secret is empty — check your GitHub repo secrets.")
+    log.info("Logging in to Maytronics API with email: %s", email)
     resp = requests.post(
         LOGIN_URL,
         headers={**APP_HEADERS, "id-token": id_token},
         data={"email": email},
         timeout=15,
     )
+    if not resp.ok:
+        log.error("Maytronics login HTTP %s: %s", resp.status_code, resp.text)
     resp.raise_for_status()
     data = resp.json()
 

@@ -2,11 +2,11 @@ name: Run Dolphin Pool Robot
 
 on:
   schedule:
-    # Runs at 8:00 AM and 4:00 PM Eastern Time (UTC-4 in summer, UTC-5 in winter)
-    # GitHub Actions uses UTC — adjust these if your timezone differs
-    - cron: '0 12 * * *'   # 8:00 AM ET (UTC-4)
-    - cron: '0 20 * * *'   # 4:00 PM ET (UTC-4)
-  workflow_dispatch:        # allows you to trigger it manually from GitHub UI
+    - cron: '0 2 * * *'   # 9:00 PM CT (CDT = UTC-5)
+    - cron: '0 7 * * *'   # 2:00 AM CT (CDT = UTC-5)
+    - cron: '0 17 * * *'  # Noon CT    — runs only if temperature > 80°F
+    - cron: '0 23 * * *'  # 6:00 PM CT — runs only if temperature > 90°F
+  workflow_dispatch:        # trigger manually from the Actions tab anytime
 
 jobs:
   start-robot:
@@ -24,7 +24,15 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Check weather conditions
+        id: weather
+        env:
+          WEATHER_LAT: ${{ vars.WEATHER_LAT }}
+          WEATHER_LON: ${{ vars.WEATHER_LON }}
+        run: python check_weather.py
+
       - name: Start pool robot
+        if: steps.weather.outputs.should_run == 'true'
         env:
           DOLPHIN_EMAIL: ${{ secrets.DOLPHIN_EMAIL }}
           DOLPHIN_REFRESH_TOKEN: ${{ secrets.DOLPHIN_REFRESH_TOKEN }}

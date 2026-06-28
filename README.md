@@ -22,25 +22,40 @@ python setup_token.py
 
 Enter your MyDolphin Plus email, paste the OTP code from your inbox, and copy the printed `DOLPHIN_REFRESH_TOKEN`.
 
-### 2. Add GitHub Secrets
+### 2. Add GitHub Secrets and Variables
 
-Go to your repo → **Settings → Secrets and variables → Actions → New repository secret** and add:
+Go to your repo → **Settings → Secrets and variables → Actions**.
+
+**Secrets** (sensitive — keep private):
 
 | Secret name | Value |
 |---|---|
 | `DOLPHIN_EMAIL` | Your MyDolphin Plus email |
 | `DOLPHIN_REFRESH_TOKEN` | The token from step 1 |
 
-### 3. Customize the schedule
+**Variables** (non-sensitive — used for weather):
 
-Edit [`.github/workflows/schedule.yml`](.github/workflows/schedule.yml) and adjust the cron lines. The defaults run at **8:00 AM and 4:00 PM Eastern Time** every day.
+| Variable name | Value |
+|---|---|
+| `WEATHER_LAT` | Your latitude (e.g. `32.7767`) |
+| `WEATHER_LON` | Your longitude (e.g. `-96.7970`) |
 
-```yaml
-- cron: '0 12 * * *'   # 8:00 AM ET (UTC-4, summer)
-- cron: '0 20 * * *'   # 4:00 PM ET (UTC-4, summer)
-```
+> Find your coordinates at [maps.google.com](https://maps.google.com) — right-click your location and copy the coordinates.
 
-You can also trigger it manually from the **Actions** tab using the "Run workflow" button.
+### 3. Schedule and weather thresholds
+
+The robot runs on this schedule (Central Time):
+
+| Time | Condition |
+|---|---|
+| 9:00 PM | Always |
+| 2:00 AM | Always |
+| Noon | Only if temperature > 80°F |
+| 6:00 PM | Only if temperature > 90°F |
+
+Temperature is fetched from [Open-Meteo](https://open-meteo.com/) (free, no API key needed).
+
+You can also trigger it anytime from the **Actions** tab → "Run workflow" — manual triggers always run regardless of temperature.
 
 ## Files
 
@@ -48,6 +63,7 @@ You can also trigger it manually from the **Actions** tab using the "Run workflo
 |---|---|
 | `setup_token.py` | One-time setup: gets your refresh token via OTP |
 | `dolphin_start.py` | Starts the robot (run by GitHub Actions) |
+| `check_weather.py` | Fetches current temperature and decides whether to run |
 | `.github/workflows/schedule.yml` | Cron schedule and workflow definition |
 | `requirements.txt` | Python dependencies |
 

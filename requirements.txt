@@ -1,4 +1,4 @@
 requests
 cryptography
 awscrt
-awsiot
+awsiotsdk

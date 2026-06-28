@@ -3,11 +3,12 @@ Check current temperature and set a GitHub Actions output controlling whether
 the robot should run.
 
 Time slots (CDT = UTC-5, summer):
-  9 PM CT  → 02 UTC : always run
   2 AM CT  → 07 UTC : always run
   Noon CT  → 17 UTC : run only if temperature > 80°F
   6 PM CT  → 23 UTC : run only if temperature > 90°F
   manual trigger    : always run
+
+Note: 9 PM is handled by the Dolphin app's built-in schedule.
 """
 
 import datetime
@@ -16,7 +17,7 @@ import sys
 
 import requests
 
-ALWAYS_RUN_HOURS = {2, 7}
+ALWAYS_RUN_HOURS = {7}
 NOON_UTC = 17
 EVENING_UTC = 23
 

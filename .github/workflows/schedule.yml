@@ -2,7 +2,6 @@ name: Run Dolphin Pool Robot
 
 on:
   schedule:
-    - cron: '0 2 * * *'   # 9:00 PM CT (CDT = UTC-5)
     - cron: '0 7 * * *'   # 2:00 AM CT (CDT = UTC-5)
     - cron: '0 17 * * *'  # Noon CT    — runs only if temperature > 80°F
     - cron: '0 23 * * *'  # 6:00 PM CT — runs only if temperature > 90°F

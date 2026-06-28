@@ -69,11 +69,26 @@ def refresh_id_token(refresh_token: str) -> str:
     return id_token
 
 
+def _email_from_id_token(id_token: str) -> str:
+    """Decode JWT payload (no verification) to extract the email claim."""
+    try:
+        payload_b64 = id_token.split(".")[1]
+        payload_b64 += "=" * (4 - len(payload_b64) % 4)
+        payload = json.loads(base64.urlsafe_b64decode(payload_b64))
+        return payload.get("email", "<not found>")
+    except Exception:
+        return "<could not decode>"
+
+
 def login(email: str, id_token: str) -> tuple[str, str]:
     """Returns (api_token, robot_serial_number)."""
     if not email:
         raise RuntimeError("DOLPHIN_EMAIL secret is empty — check your GitHub repo secrets.")
-    log.info("Logging in to Maytronics API with email: %s", email)
+    token_email = _email_from_id_token(id_token)
+    log.info("DOLPHIN_EMAIL secret : %s", email)
+    log.info("Email inside IdToken : %s", token_email)
+    if email.lower().strip() != token_email.lower().strip():
+        log.warning("Email mismatch — these must match exactly for Maytronics login to work.")
     resp = requests.post(
         LOGIN_URL,
         headers={**APP_HEADERS, "id-token": id_token},
@@ -86,6 +101,7 @@ def login(email: str, id_token: str) -> tuple[str, str]:
     data = resp.json()
 
     if str(data.get("Status", "0")) != "1":
+        log.error("Maytronics login response: %s", data)
         raise RuntimeError(f"Login failed: {data.get('Alert', data)}")
 
     payload = data["Data"]

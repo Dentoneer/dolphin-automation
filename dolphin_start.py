@@ -3,7 +3,7 @@ Dolphin Nautilus WiFi Pro - Start cleaning cycle via MyDolphin Plus cloud API.
 
 Flow:
   1. Use refresh token → get fresh IdToken from Cognito
-  2. IdToken → authenticate with Maytronics API → get robot serial + API token
+  2. IdToken → authenticate with Maytronics API → get motor unit serial
   3. IdToken → get AWS IoT temp credentials
   4. Connect to AWS IoT MQTT → publish start command
 """

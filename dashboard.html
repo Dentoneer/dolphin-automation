@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🐬 Dolphin Pool Robot Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0f172a; color: #e2e8f0; min-height: 100vh; padding: 2rem; }
+    h1 { font-size: 1.8rem; margin-bottom: 0.25rem; }
+    .subtitle { color: #64748b; margin-bottom: 2rem; font-size: 0.9rem; }
+    .stats { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .stat { background: #1e293b; border-radius: 12px; padding: 1.25rem 1.75rem;
+             flex: 1; min-width: 140px; }
+    .stat .label { font-size: 0.75rem; color: #64748b; text-transform: uppercase;
+                    letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+    .stat .value { font-size: 2rem; font-weight: 700; }
+    .completed-color { color: #34d399; }
+    .early-color { color: #fbbf24; }
+    table { width: 100%; border-collapse: collapse; background: #1e293b;
+             border-radius: 12px; overflow: hidden; }
+    th { background: #0f172a; padding: 0.875rem 1rem; text-align: left;
+          font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;
+          color: #64748b; }
+    td { padding: 0.875rem 1rem; border-bottom: 1px solid #0f172a; font-size: 0.9rem; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #263348; }
+    .badge { padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.8rem;
+              font-weight: 600; white-space: nowrap; }
+    .badge.completed { background: #064e3b; color: #34d399; }
+    .badge.early { background: #451a03; color: #fbbf24; }
+    .badge.running { background: #1e3a5f; color: #60a5fa; }
+    .updated { color: #475569; font-size: 0.75rem; margin-top: 1.5rem; text-align: right; }
+  </style>
+</head>
+<body>
+  <h1>🐬 Dolphin Pool Robot</h1>
+  <p class="subtitle">Run history — auto-updated after each cycle</p>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="label">Total Runs</div>
+      <div class="value">1</div>
+    </div>
+    <div class="stat">
+      <div class="label">Completed</div>
+      <div class="value completed-color">0</div>
+    </div>
+    <div class="stat">
+      <div class="label">Early Stops</div>
+      <div class="value early-color">1</div>
+    </div>
+    <div class="stat">
+      <div class="label">Avg Duration</div>
+      <div class="value">1<span style="font-size:1rem;color:#64748b"> min</span></div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Started</th>
+        <th>Stopped</th>
+        <th>Duration</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+        <tr>
+            <td>#1</td>
+            <td>Jul 18, 2026 04:26 AM UTC</td>
+            <td>04:27 AM UTC</td>
+            <td>1 min</td>
+            <td><span class="badge early">⚠️ Early Stop</span></td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p class="updated">Last updated: Jul 18, 2026 04:30 AM UTC</p>
+</body>
+</html>

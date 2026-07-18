@@ -21,6 +21,8 @@ on:
 
 jobs:
   start-robot:
+    permissions:
+      contents: write
     # Runs at 2AM, Noon, and 6PM CT crons — and manual "start" trigger
     if: |
       github.event_name == 'workflow_dispatch' && github.event.inputs.job == 'start' ||
@@ -67,6 +69,8 @@ jobs:
           git push
 
   check-robot:
+    permissions:
+      contents: write
     # Runs at 4AM, 2PM, and 8PM CT crons — and manual "check" trigger
     if: |
       github.event_name == 'workflow_dispatch' && github.event.inputs.job == 'check' ||

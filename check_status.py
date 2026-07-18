@@ -109,11 +109,16 @@ def get_shadow_state(motor_serial: str, creds: dict) -> dict:
     host_resolver = io.DefaultHostResolver(event_loop_group)
     client_bootstrap = io.ClientBootstrap(event_loop_group, host_resolver)
 
+    ca_path = os.path.join(os.path.dirname(__file__), "AmazonRootCA.pem")
+    with open(ca_path, "rb") as f:
+        ca_bytes = f.read()
+
     mqtt_connection = mqtt_connection_builder.websockets_with_default_aws_signing(
         endpoint=AWS_IOT_ENDPOINT,
         port=443,
         client_bootstrap=client_bootstrap,
         region=AWS_REGION,
+        ca_bytes=ca_bytes,
         credentials_provider=credentials_provider,
         client_id=f"dolphin-check-{int(time.time())}",
         clean_session=True,
@@ -121,17 +126,21 @@ def get_shadow_state(motor_serial: str, creds: dict) -> dict:
     )
 
     mqtt_connection.connect().result(timeout=30)
-    mqtt_connection.subscribe(
+
+    # Newer awsiot returns (future, packet_id) — unpack and wait on the future only
+    sub_future, _ = mqtt_connection.subscribe(
         topic=shadow_accepted_topic,
         qos=mqtt.QoS.AT_LEAST_ONCE,
         callback=on_message,
-    ).result(timeout=10)
+    )
+    sub_future.result(timeout=10)
 
-    mqtt_connection.publish(
+    pub_future, _ = mqtt_connection.publish(
         topic=shadow_get_topic,
         payload="{}",
         qos=mqtt.QoS.AT_LEAST_ONCE,
-    ).result(timeout=10)
+    )
+    pub_future.result(timeout=10)
 
     # Wait up to 10 seconds for the shadow response
     for _ in range(20):

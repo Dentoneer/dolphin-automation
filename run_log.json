@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "id": 1,
+    "start_time": "2026-07-18T04:26:38.131319+00:00",
+    "stop_time": null,
+    "duration_minutes": null,
+    "status": "running"
+  }
+]

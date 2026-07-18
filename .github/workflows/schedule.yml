@@ -2,21 +2,38 @@ name: Run Dolphin Pool Robot
 
 on:
   schedule:
-    - cron: '0 7 * * *'   # 2:00 AM CT (CDT = UTC-5)
-    - cron: '0 17 * * *'  # Noon CT    — runs only if temperature > 80°F
-    - cron: '0 23 * * *'  # 6:00 PM CT — runs only if temperature > 90°F
-  workflow_dispatch:        # trigger manually from the Actions tab anytime
+    - cron: '0 7 * * *'    # 2:00 AM CT  — start
+    - cron: '0 9 * * *'    # 4:00 AM CT  — check (2h after start)
+    - cron: '0 17 * * *'   # Noon CT     — start (only if temp > 80°F)
+    - cron: '0 19 * * *'   # 2:00 PM CT  — check (2h after start)
+    - cron: '0 23 * * *'   # 6:00 PM CT  — start (only if temp > 90°F)
+    - cron: '0 1 * * *'    # 8:00 PM CT  — check (2h after start)
+  workflow_dispatch:
+    inputs:
+      job:
+        description: 'Which job to run'
+        required: true
+        default: 'start'
+        type: choice
+        options:
+          - start
+          - check
 
 jobs:
   start-robot:
+    # Runs at 2AM, Noon, and 6PM CT crons — and manual "start" trigger
+    if: |
+      github.event_name == 'workflow_dispatch' && github.event.inputs.job == 'start' ||
+      github.event_name == 'schedule' && (
+        startsWith(github.event.schedule, '0 7') ||
+        startsWith(github.event.schedule, '0 17') ||
+        startsWith(github.event.schedule, '0 23')
+      )
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
@@ -35,3 +52,49 @@ jobs:
         env:
           DOLPHIN_REFRESH_TOKEN: ${{ secrets.DOLPHIN_REFRESH_TOKEN }}
         run: python dolphin_start.py
+
+      - name: Log start time
+        if: steps.weather.outputs.should_run == 'true'
+        run: python log_start.py
+
+      - name: Commit run log
+        if: steps.weather.outputs.should_run == 'true'
+        run: |
+          git config user.email "github-actions@github.com"
+          git config user.name "GitHub Actions"
+          git add run_log.json
+          git commit -m "Log: robot started at $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git push
+
+  check-robot:
+    # Runs at 4AM, 2PM, and 8PM CT crons — and manual "check" trigger
+    if: |
+      github.event_name == 'workflow_dispatch' && github.event.inputs.job == 'check' ||
+      github.event_name == 'schedule' && (
+        startsWith(github.event.schedule, '0 9') ||
+        startsWith(github.event.schedule, '0 19') ||
+        startsWith(github.event.schedule, '0 1 ')
+      )
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check robot status & update dashboard
+        env:
+          DOLPHIN_REFRESH_TOKEN: ${{ secrets.DOLPHIN_REFRESH_TOKEN }}
+        run: python check_status.py
+
+      - name: Commit updated log and dashboard
+        run: |
+          git config user.email "github-actions@github.com"
+          git config user.name "GitHub Actions"
+          git add run_log.json dashboard.html
+          git commit -m "Log: status checked at $(date -u '+%Y-%m-%d %H:%M UTC')" || echo "Nothing to commit"
+          git push

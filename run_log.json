@@ -107,8 +107,8 @@
   {
     "id": 16,
     "start_time": "2026-07-19T23:53:26.235396+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-07-20T00:26:14+00:00",
+    "duration_minutes": 33,
+    "status": "stopped_early"
   }
 ]

@@ -9,6 +9,7 @@ import os
 import sys
 import time
 import logging
+from collections import Counter
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
@@ -127,7 +128,6 @@ def get_shadow_state(motor_serial: str, creds: dict) -> dict:
 
     mqtt_connection.connect().result(timeout=30)
 
-    # Newer awsiot returns (future, packet_id) — unpack and wait on the future only
     sub_future, _ = mqtt_connection.subscribe(
         topic=shadow_accepted_topic,
         qos=mqtt.QoS.AT_LEAST_ONCE,
@@ -142,7 +142,6 @@ def get_shadow_state(motor_serial: str, creds: dict) -> dict:
     )
     pub_future.result(timeout=10)
 
-    # Wait up to 10 seconds for the shadow response
     for _ in range(20):
         if event["done"]:
             break
@@ -155,10 +154,10 @@ def get_shadow_state(motor_serial: str, creds: dict) -> dict:
 def determine_stop_time(shadow: dict, start_time: datetime) -> tuple[datetime, str]:
     """
     Extract when the robot stopped from shadow metadata timestamps.
-    Falls back to now if no timestamp available.
+    Only marks 'stopped_early' if it ran less than 30 minutes.
+    A robot that's 'off' after 2 hours simply finished its normal cycle.
     """
     try:
-        # Shadow metadata has Unix timestamps for each reported field
         pws_ts = (
             shadow.get("metadata", {})
             .get("reported", {})
@@ -168,33 +167,42 @@ def determine_stop_time(shadow: dict, start_time: datetime) -> tuple[datetime, s
         )
         if pws_ts:
             stop_time = datetime.fromtimestamp(pws_ts, tz=timezone.utc)
-            # Only trust it if it's after the start time
             if stop_time > start_time:
-                return stop_time, "stopped_early"
+                duration_min = (stop_time - start_time).total_seconds() / 60
+                if duration_min < 30:
+                    return stop_time, "stopped_early"
+                return stop_time, "completed"
     except Exception:
         pass
 
-    # If the robot is still reported as "on" after 2 hours, it completed normally
-    pws_state = (
-        shadow.get("state", {})
-        .get("reported", {})
-        .get("systemState", {})
-        .get("pwsState", "")
-    )
-    now = datetime.now(timezone.utc)
-    if str(pws_state).lower() in ("on", "1"):
-        return now, "completed"
-    return now, "stopped_early"
+    # No reliable shadow timestamp — assume completed after the 2h check window.
+    return datetime.now(timezone.utc), "completed"
 
 
 def update_log(shadow: dict) -> list:
-    """Find the most recent 'running' entry and update it with stop info."""
+    """Update the most recent running entry. Also sweeps stale running entries."""
     log_data = json.loads(LOG_FILE.read_text()) if LOG_FILE.exists() else []
 
-    # Find the last running entry
+    # Sweep: if a "running" entry is >4h old and was never checked, mark it
+    # completed (2h assumed) rather than leaving it stuck as "running" forever.
+    now = datetime.now(timezone.utc)
+    for e in log_data:
+        if e["status"] == "running":
+            try:
+                start = datetime.fromisoformat(e["start_time"])
+                if now - start > timedelta(hours=4):
+                    assumed_stop = start + timedelta(hours=2)
+                    e["stop_time"] = assumed_stop.isoformat()
+                    e["duration_minutes"] = 120
+                    e["status"] = "completed"
+                    log.info("Marked stale entry #%s as completed (check job was missed)", e["id"])
+            except Exception:
+                pass
+
     entry = next((e for e in reversed(log_data) if e["status"] == "running"), None)
     if not entry:
         log.warning("No running entry found in log — nothing to update.")
+        LOG_FILE.write_text(json.dumps(log_data, indent=2))
         return log_data
 
     start_time = datetime.fromisoformat(entry["start_time"])
@@ -211,35 +219,66 @@ def update_log(shadow: dict) -> list:
 
 
 def generate_dashboard(log_data: list) -> None:
-    """Write a self-contained HTML dashboard with the log data embedded."""
+    """Write a self-contained HTML dashboard with charts and run history."""
+
+    # ── Chart data ────────────────────────────────────────────────────────────
+    today = datetime.now(timezone.utc).date()
+    dates_14 = [(today - timedelta(days=i)).isoformat() for i in range(13, -1, -1)]
+    labels_14 = [(today - timedelta(days=i)).strftime("%b %d") for i in range(13, -1, -1)]
+
+    runs_per_day = Counter()
+    for e in log_data:
+        try:
+            d = datetime.fromisoformat(e["start_time"]).date().isoformat()
+            runs_per_day[d] += 1
+        except Exception:
+            pass
+    daily_counts = [runs_per_day.get(d, 0) for d in dates_14]
+
+    recent_runs = [e for e in log_data if e.get("duration_minutes") is not None][-12:]
+    run_labels = [f"#{e['id']}" for e in recent_runs]
+    run_durations = [e.get("duration_minutes", 0) for e in recent_runs]
+    run_bar_colors = [
+        "#34d399" if e.get("status") == "completed" else
+        "#fbbf24" if e.get("status") == "stopped_early" else "#60a5fa"
+        for e in recent_runs
+    ]
+
+    daily_labels_json = json.dumps(labels_14)
+    daily_counts_json = json.dumps(daily_counts)
+    run_labels_json = json.dumps(run_labels)
+    run_durations_json = json.dumps(run_durations)
+    run_colors_json = json.dumps(run_bar_colors)
+
+    # ── Table rows ────────────────────────────────────────────────────────────
     rows = ""
+    ct_offset = timedelta(hours=-5)  # UTC-5 (approximate Central Time)
     for entry in reversed(log_data):
         start = entry.get("start_time", "")
         stop = entry.get("stop_time", "—")
         duration = entry.get("duration_minutes")
         status = entry.get("status", "unknown")
 
-        # Format times for display
         try:
-            start_dt = datetime.fromisoformat(start)
-            start_display = start_dt.strftime("%b %d, %Y %I:%M %p UTC")
+            start_dt = datetime.fromisoformat(start) + ct_offset
+            start_display = start_dt.strftime("%b %d, %Y %I:%M %p CT")
         except Exception:
             start_display = start
 
         try:
-            stop_dt = datetime.fromisoformat(stop)
-            stop_display = stop_dt.strftime("%I:%M %p UTC")
+            stop_dt = datetime.fromisoformat(stop) + ct_offset
+            stop_display = stop_dt.strftime("%I:%M %p CT")
         except Exception:
             stop_display = stop
 
         duration_display = f"{duration} min" if duration is not None else "—"
 
         if status == "completed":
-            badge = '<span class="badge completed">✅ Completed</span>'
+            badge = '<span class="badge completed">Completed</span>'
         elif status == "stopped_early":
-            badge = '<span class="badge early">⚠️ Early Stop</span>'
+            badge = '<span class="badge early">Early Stop</span>'
         else:
-            badge = '<span class="badge running">🔄 Running</span>'
+            badge = '<span class="badge running">Running</span>'
 
         rows += f"""
         <tr>
@@ -250,20 +289,19 @@ def generate_dashboard(log_data: list) -> None:
             <td>{badge}</td>
         </tr>"""
 
+    # ── Stats ─────────────────────────────────────────────────────────────────
     total = len(log_data)
     completed = sum(1 for e in log_data if e.get("status") == "completed")
     early = sum(1 for e in log_data if e.get("status") == "stopped_early")
-    avg_duration = (
-        round(sum(e["duration_minutes"] for e in log_data if e.get("duration_minutes")) / total)
-        if total else 0
-    )
+    durations = [e["duration_minutes"] for e in log_data if e.get("duration_minutes")]
+    avg_duration = round(sum(durations) / len(durations)) if durations else 0
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🐬 Dolphin Pool Robot Dashboard</title>
+  <title>Dolphin Pool Robot Dashboard</title>
   <style>
     * {{ box-sizing: border-box; margin: 0; padding: 0; }}
     body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -272,12 +310,21 @@ def generate_dashboard(log_data: list) -> None:
     .subtitle {{ color: #64748b; margin-bottom: 2rem; font-size: 0.9rem; }}
     .stats {{ display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }}
     .stat {{ background: #1e293b; border-radius: 12px; padding: 1.25rem 1.75rem;
-             flex: 1; min-width: 140px; }}
+             flex: 1; min-width: 130px; }}
     .stat .label {{ font-size: 0.75rem; color: #64748b; text-transform: uppercase;
                     letter-spacing: 0.05em; margin-bottom: 0.5rem; }}
     .stat .value {{ font-size: 2rem; font-weight: 700; }}
     .completed-color {{ color: #34d399; }}
     .early-color {{ color: #fbbf24; }}
+    .charts {{ display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }}
+    .chart-card {{ background: #1e293b; border-radius: 12px; padding: 1.25rem 1.5rem;
+                   flex: 1; min-width: 280px; }}
+    .chart-card h2 {{ font-size: 0.75rem; color: #64748b; text-transform: uppercase;
+                      letter-spacing: 0.05em; margin-bottom: 1rem; }}
+    .legend {{ display: flex; gap: 1rem; margin-top: 0.75rem; flex-wrap: wrap; }}
+    .legend-item {{ display: flex; align-items: center; gap: 0.35rem;
+                    font-size: 0.75rem; color: #94a3b8; }}
+    .legend-dot {{ width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }}
     table {{ width: 100%; border-collapse: collapse; background: #1e293b;
              border-radius: 12px; overflow: hidden; }}
     th {{ background: #0f172a; padding: 0.875rem 1rem; text-align: left;
@@ -317,12 +364,34 @@ def generate_dashboard(log_data: list) -> None:
     </div>
   </div>
 
+  <div class="charts">
+    <div class="chart-card">
+      <h2>Runs per Day — Last 14 Days</h2>
+      <canvas id="dailyChart" height="180"></canvas>
+    </div>
+    <div class="chart-card">
+      <h2>Duration per Run (minutes)</h2>
+      <canvas id="durationChart" height="180"></canvas>
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#34d399"></div>Completed
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#fbbf24"></div>Early stop
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#60a5fa"></div>Running
+        </div>
+      </div>
+    </div>
+  </div>
+
   <table>
     <thead>
       <tr>
         <th>#</th>
-        <th>Started</th>
-        <th>Stopped</th>
+        <th>Started (CT)</th>
+        <th>Stopped (CT)</th>
         <th>Duration</th>
         <th>Status</th>
       </tr>
@@ -333,6 +402,62 @@ def generate_dashboard(log_data: list) -> None:
   </table>
 
   <p class="updated">Last updated: {datetime.now(timezone.utc).strftime("%b %d, %Y %I:%M %p UTC")}</p>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script>
+  (function () {{
+    const dailyLabels   = {daily_labels_json};
+    const dailyCounts   = {daily_counts_json};
+    const runLabels     = {run_labels_json};
+    const runDurations  = {run_durations_json};
+    const runColors     = {run_colors_json};
+
+    const gridColor = '#1e3a5f';
+    const tickColor = '#94a3b8';
+
+    function baseOpts(tooltipLabel) {{
+      return {{
+        responsive: true,
+        plugins: {{
+          legend: {{ display: false }},
+          tooltip: {{ callbacks: {{ label: tooltipLabel }} }}
+        }},
+        scales: {{
+          x: {{ grid: {{ color: gridColor }}, ticks: {{ color: tickColor, maxRotation: 45 }} }},
+          y: {{ grid: {{ color: gridColor }}, ticks: {{ color: tickColor }}, beginAtZero: true }}
+        }}
+      }};
+    }}
+
+    new Chart(document.getElementById('dailyChart'), {{
+      type: 'bar',
+      data: {{
+        labels: dailyLabels,
+        datasets: [{{
+          data: dailyCounts,
+          backgroundColor: '#3b82f6',
+          borderRadius: 4,
+          maxBarThickness: 32
+        }}]
+      }},
+      options: baseOpts(c => c.parsed.y + (c.parsed.y === 1 ? ' run' : ' runs'))
+    }});
+
+    new Chart(document.getElementById('durationChart'), {{
+      type: 'bar',
+      data: {{
+        labels: runLabels,
+        datasets: [{{
+          data: runDurations,
+          backgroundColor: runColors,
+          borderRadius: 4,
+          maxBarThickness: 40
+        }}]
+      }},
+      options: baseOpts(c => c.parsed.y + ' min')
+    }});
+  }})();
+  </script>
 </body>
 </html>"""
 

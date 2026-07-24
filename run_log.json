@@ -233,29 +233,29 @@
   {
     "id": 34,
     "start_time": "2026-07-23T21:14:10.257776+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-07-23T23:14:10.257776+00:00",
+    "duration_minutes": 120,
+    "status": "completed"
   },
   {
     "id": 35,
     "start_time": "2026-07-23T22:01:07.432478+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-07-24T00:01:07.432478+00:00",
+    "duration_minutes": 120,
+    "status": "completed"
   },
   {
     "id": 36,
     "start_time": "2026-07-23T23:56:45.671052+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-07-24T01:56:45.671052+00:00",
+    "duration_minutes": 120,
+    "status": "completed"
   },
   {
     "id": 37,
     "start_time": "2026-07-24T03:30:57.380308+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-07-24T03:41:17+00:00",
+    "duration_minutes": 10,
+    "status": "stopped_early"
   }
 ]

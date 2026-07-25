@@ -282,8 +282,8 @@
   {
     "id": 41,
     "start_time": "2026-07-25T08:59:28.813423+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-07-25T10:39:14.148478+00:00",
+    "duration_minutes": 100,
+    "status": "completed"
   }
 ]

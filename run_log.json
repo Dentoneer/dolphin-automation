@@ -345,9 +345,9 @@
   {
     "id": 50,
     "start_time": "2026-07-27T01:52:29.000360+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-07-27T03:52:29.000360+00:00",
+    "duration_minutes": 120,
+    "status": "completed"
   },
   {
     "id": 51,
@@ -359,15 +359,15 @@
   {
     "id": 52,
     "start_time": "2026-07-27T07:01:30.716141+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-07-27T09:01:30.716141+00:00",
+    "duration_minutes": 120,
+    "status": "completed"
   },
   {
     "id": 53,
     "start_time": "2026-07-27T10:39:00.665606+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-07-27T11:07:14+00:00",
+    "duration_minutes": 28,
+    "status": "stopped_early"
   }
 ]

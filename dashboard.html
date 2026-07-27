@@ -50,15 +50,15 @@
   <div class="stats">
     <div class="stat">
       <div class="label">Total Runs</div>
-      <div class="value">51</div>
+      <div class="value">53</div>
     </div>
     <div class="stat">
       <div class="label">Completed</div>
-      <div class="value completed-color">30</div>
+      <div class="value completed-color">32</div>
     </div>
     <div class="stat">
       <div class="label">Early Stops</div>
-      <div class="value early-color">20</div>
+      <div class="value early-color">21</div>
     </div>
     <div class="stat">
       <div class="label">Avg Duration</div>
@@ -101,6 +101,20 @@
     <tbody>
       
         <tr>
+            <td>#53</td>
+            <td>Jul 27, 2026 05:39 AM CT</td>
+            <td>06:07 AM CT</td>
+            <td>28 min</td>
+            <td><span class="badge early">Early Stop</span></td>
+        </tr>
+        <tr>
+            <td>#52</td>
+            <td>Jul 27, 2026 02:01 AM CT</td>
+            <td>04:01 AM CT</td>
+            <td>120 min</td>
+            <td><span class="badge completed">Completed</span></td>
+        </tr>
+        <tr>
             <td>#51</td>
             <td>Jul 26, 2026 10:42 PM CT</td>
             <td>10:49 PM CT</td>
@@ -110,9 +124,9 @@
         <tr>
             <td>#50</td>
             <td>Jul 26, 2026 08:52 PM CT</td>
-            <td>None</td>
-            <td>—</td>
-            <td><span class="badge running">Running</span></td>
+            <td>10:52 PM CT</td>
+            <td>120 min</td>
+            <td><span class="badge completed">Completed</span></td>
         </tr>
         <tr>
             <td>#49</td>
@@ -460,16 +474,16 @@
     </tbody>
   </table>
 
-  <p class="updated">Last updated: Jul 27, 2026 04:33 AM UTC</p>
+  <p class="updated">Last updated: Jul 27, 2026 12:31 PM UTC</p>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script>
   (function () {
     const dailyLabels   = ["Jul 14", "Jul 15", "Jul 16", "Jul 17", "Jul 18", "Jul 19", "Jul 20", "Jul 21", "Jul 22", "Jul 23", "Jul 24", "Jul 25", "Jul 26", "Jul 27"];
-    const dailyCounts   = [0, 0, 0, 0, 11, 5, 6, 6, 3, 5, 4, 5, 4, 2];
-    const runLabels     = ["#39", "#40", "#41", "#42", "#43", "#44", "#45", "#46", "#47", "#48", "#49", "#51"];
-    const runDurations  = [1, 185, 100, 41, 120, 120, 120, 120, 10, 121, 120, 7];
-    const runColors     = ["#fbbf24", "#34d399", "#34d399", "#34d399", "#34d399", "#34d399", "#34d399", "#34d399", "#fbbf24", "#34d399", "#34d399", "#fbbf24"];
+    const dailyCounts   = [0, 0, 0, 0, 11, 5, 6, 6, 3, 5, 4, 5, 4, 4];
+    const runLabels     = ["#42", "#43", "#44", "#45", "#46", "#47", "#48", "#49", "#50", "#51", "#52", "#53"];
+    const runDurations  = [41, 120, 120, 120, 120, 10, 121, 120, 120, 7, 120, 28];
+    const runColors     = ["#34d399", "#34d399", "#34d399", "#34d399", "#34d399", "#fbbf24", "#34d399", "#34d399", "#34d399", "#fbbf24", "#34d399", "#fbbf24"];
 
     const gridColor = '#1e3a5f';
     const tickColor = '#94a3b8';

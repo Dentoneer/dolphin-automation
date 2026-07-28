@@ -411,5 +411,12 @@
     "stop_time": "2026-07-28T19:12:57+00:00",
     "duration_minutes": 61,
     "status": "completed"
+  },
+  {
+    "id": 60,
+    "start_time": "2026-07-28T23:55:09.624203+00:00",
+    "stop_time": null,
+    "duration_minutes": null,
+    "status": "running"
   }
 ]

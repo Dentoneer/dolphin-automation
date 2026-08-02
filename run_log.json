@@ -513,15 +513,15 @@
   {
     "id": 74,
     "start_time": "2026-08-02T14:42:52.554079+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-08-02T16:42:52.554079+00:00",
+    "duration_minutes": 120,
+    "status": "completed"
   },
   {
     "id": 75,
     "start_time": "2026-08-02T17:59:12.755429+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-08-02T18:06:55+00:00",
+    "duration_minutes": 8,
+    "status": "stopped_early"
   }
 ]

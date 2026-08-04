@@ -551,5 +551,12 @@
     "stop_time": "2026-08-04T02:05:19.027583+00:00",
     "duration_minutes": 120,
     "status": "completed"
+  },
+  {
+    "id": 80,
+    "start_time": "2026-08-04T09:36:46.000677+00:00",
+    "stop_time": null,
+    "duration_minutes": null,
+    "status": "running"
   }
 ]

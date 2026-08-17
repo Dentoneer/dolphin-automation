@@ -856,9 +856,9 @@
   {
     "id": 123,
     "start_time": "2026-08-16T23:09:48.113652+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-08-17T01:09:48.113652+00:00",
+    "duration_minutes": 120,
+    "status": "completed"
   },
   {
     "id": 124,
@@ -870,8 +870,8 @@
   {
     "id": 125,
     "start_time": "2026-08-17T07:48:41.505247+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-08-17T08:26:24+00:00",
+    "duration_minutes": 38,
+    "status": "completed"
   }
 ]

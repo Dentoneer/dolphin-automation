@@ -873,5 +873,12 @@
     "stop_time": "2026-08-17T08:26:24+00:00",
     "duration_minutes": 38,
     "status": "completed"
+  },
+  {
+    "id": 126,
+    "start_time": "2026-08-17T17:23:28.757642+00:00",
+    "stop_time": null,
+    "duration_minutes": null,
+    "status": "running"
   }
 ]

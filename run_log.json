@@ -821,16 +821,16 @@
   {
     "id": 118,
     "start_time": "2026-08-16T17:15:47.911768+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-08-16T19:15:47.911768+00:00",
+    "duration_minutes": 120,
+    "status": "completed"
   },
   {
     "id": 119,
     "start_time": "2026-08-16T18:24:02.324561+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-08-16T20:24:02.324561+00:00",
+    "duration_minutes": 120,
+    "status": "completed"
   },
   {
     "id": 120,
@@ -842,16 +842,16 @@
   {
     "id": 121,
     "start_time": "2026-08-16T20:19:14.905612+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-08-16T22:19:14.905612+00:00",
+    "duration_minutes": 120,
+    "status": "completed"
   },
   {
     "id": 122,
     "start_time": "2026-08-16T21:01:05.045797+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-08-16T23:01:05.045797+00:00",
+    "duration_minutes": 120,
+    "status": "completed"
   },
   {
     "id": 123,
@@ -863,8 +863,8 @@
   {
     "id": 124,
     "start_time": "2026-08-16T23:15:28.251994+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-08-17T01:07:42+00:00",
+    "duration_minutes": 112,
+    "status": "completed"
   }
 ]

@@ -1188,5 +1188,12 @@
     "stop_time": "2026-09-01T12:34:17+00:00",
     "duration_minutes": 15,
     "status": "stopped_early"
+  },
+  {
+    "id": 171,
+    "start_time": "2026-09-01T19:43:45.298184+00:00",
+    "stop_time": null,
+    "duration_minutes": null,
+    "status": "running"
   }
 ]

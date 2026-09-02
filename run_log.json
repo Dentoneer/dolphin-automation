@@ -1213,8 +1213,8 @@
   {
     "id": 174,
     "start_time": "2026-09-02T19:37:16.699802+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-09-02T20:03:08+00:00",
+    "duration_minutes": 26,
+    "status": "stopped_early"
   }
 ]

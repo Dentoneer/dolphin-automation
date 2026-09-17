@@ -1521,8 +1521,8 @@
   {
     "id": 218,
     "start_time": "2026-09-17T12:23:22.058278+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-09-17T14:13:52.020592+00:00",
+    "duration_minutes": 110,
+    "status": "completed"
   }
 ]

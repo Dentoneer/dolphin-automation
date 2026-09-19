@@ -1563,8 +1563,8 @@
   {
     "id": 224,
     "start_time": "2026-09-19T11:45:41.258321+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-09-19T13:00:57.880530+00:00",
+    "duration_minutes": 75,
+    "status": "completed"
   }
 ]

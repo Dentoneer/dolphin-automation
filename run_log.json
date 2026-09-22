@@ -1633,8 +1633,8 @@
   {
     "id": 234,
     "start_time": "2026-09-22T19:59:46.444386+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-09-22T21:45:36.454950+00:00",
+    "duration_minutes": 106,
+    "status": "completed"
   }
 ]

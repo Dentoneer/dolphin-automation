@@ -1773,8 +1773,8 @@
   {
     "id": 254,
     "start_time": "2026-09-29T13:41:54.859424+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-09-29T15:36:54.646509+00:00",
+    "duration_minutes": 115,
+    "status": "completed"
   }
 ]

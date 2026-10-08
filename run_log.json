@@ -1955,8 +1955,8 @@
   {
     "id": 280,
     "start_time": "2026-10-08T14:20:30.851889+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-10-08T16:18:14.453568+00:00",
+    "duration_minutes": 118,
+    "status": "completed"
   }
 ]

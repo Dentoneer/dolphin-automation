@@ -1983,8 +1983,8 @@
   {
     "id": 284,
     "start_time": "2026-10-09T21:27:40.000747+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-10-09T23:01:33.991318+00:00",
+    "duration_minutes": 94,
+    "status": "completed"
   }
 ]

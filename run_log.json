@@ -1979,5 +1979,12 @@
     "stop_time": "2026-10-09T16:02:28.236298+00:00",
     "duration_minutes": 117,
     "status": "completed"
+  },
+  {
+    "id": 284,
+    "start_time": "2026-10-09T21:27:40.000747+00:00",
+    "stop_time": null,
+    "duration_minutes": null,
+    "status": "running"
   }
 ]

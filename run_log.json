@@ -1997,8 +1997,8 @@
   {
     "id": 286,
     "start_time": "2026-10-10T13:15:28.735430+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-10-10T15:10:46.281725+00:00",
+    "duration_minutes": 115,
+    "status": "completed"
   }
 ]

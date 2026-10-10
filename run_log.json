@@ -1993,5 +1993,12 @@
     "stop_time": "2026-10-10T04:02:12.788932+00:00",
     "duration_minutes": 120,
     "status": "completed"
+  },
+  {
+    "id": 286,
+    "start_time": "2026-10-10T13:15:28.735430+00:00",
+    "stop_time": null,
+    "duration_minutes": null,
+    "status": "running"
   }
 ]

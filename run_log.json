@@ -2014,5 +2014,12 @@
     "stop_time": "2026-10-11T03:31:36.000885+00:00",
     "duration_minutes": 120,
     "status": "completed"
+  },
+  {
+    "id": 289,
+    "start_time": "2026-10-11T13:44:24.034704+00:00",
+    "stop_time": null,
+    "duration_minutes": null,
+    "status": "running"
   }
 ]

@@ -2007,5 +2007,12 @@
     "stop_time": "2026-10-10T22:12:25.740990+00:00",
     "duration_minutes": 105,
     "status": "completed"
+  },
+  {
+    "id": 288,
+    "start_time": "2026-10-11T01:31:36.000885+00:00",
+    "stop_time": null,
+    "duration_minutes": null,
+    "status": "running"
   }
 ]

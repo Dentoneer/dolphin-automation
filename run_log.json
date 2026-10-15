@@ -2098,5 +2098,12 @@
     "stop_time": "2026-10-15T14:04:08.757998+00:00",
     "duration_minutes": 99,
     "status": "completed"
+  },
+  {
+    "id": 301,
+    "start_time": "2026-10-15T20:10:13.406933+00:00",
+    "stop_time": null,
+    "duration_minutes": null,
+    "status": "running"
   }
 ]

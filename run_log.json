@@ -2357,5 +2357,12 @@
     "stop_time": "2026-10-27T22:50:22.706666+00:00",
     "duration_minutes": 104,
     "status": "completed"
+  },
+  {
+    "id": 338,
+    "start_time": "2026-10-28T01:59:48.212960+00:00",
+    "stop_time": null,
+    "duration_minutes": null,
+    "status": "running"
   }
 ]

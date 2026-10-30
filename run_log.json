@@ -2410,8 +2410,8 @@
   {
     "id": 345,
     "start_time": "2026-10-30T13:47:18.073125+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-10-30T15:45:00.230587+00:00",
+    "duration_minutes": 118,
+    "status": "completed"
   }
 ]

@@ -2557,8 +2557,8 @@
   {
     "id": 366,
     "start_time": "2026-11-06T21:55:16.444731+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-11-06T23:38:54.511946+00:00",
+    "duration_minutes": 104,
+    "status": "completed"
   }
 ]

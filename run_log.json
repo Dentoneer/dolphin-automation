@@ -2609,5 +2609,12 @@
     "stop_time": "2026-11-09T04:19:33.327855+00:00",
     "duration_minutes": 120,
     "status": "completed"
+  },
+  {
+    "id": 374,
+    "start_time": "2026-11-10T00:31:47.548572+00:00",
+    "stop_time": null,
+    "duration_minutes": null,
+    "status": "running"
   }
 ]

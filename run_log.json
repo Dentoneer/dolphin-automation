@@ -2613,8 +2613,8 @@
   {
     "id": 374,
     "start_time": "2026-11-10T00:31:47.548572+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-11-10T01:52:53.917782+00:00",
+    "duration_minutes": 81,
+    "status": "completed"
   }
 ]

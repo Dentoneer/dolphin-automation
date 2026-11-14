@@ -2683,8 +2683,8 @@
   {
     "id": 384,
     "start_time": "2026-11-13T22:21:47.159716+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-11-14T00:08:58.165991+00:00",
+    "duration_minutes": 107,
+    "status": "completed"
   }
 ]

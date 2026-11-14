@@ -2690,8 +2690,8 @@
   {
     "id": 385,
     "start_time": "2026-11-14T02:53:00.909121+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-11-14T04:53:00.909121+00:00",
+    "duration_minutes": 120,
+    "status": "completed"
   }
 ]

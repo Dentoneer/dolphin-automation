@@ -2760,8 +2760,8 @@
   {
     "id": 395,
     "start_time": "2026-11-17T16:39:02.039724+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-11-17T18:21:54.505159+00:00",
+    "duration_minutes": 103,
+    "status": "completed"
   }
 ]

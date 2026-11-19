@@ -2777,5 +2777,12 @@
     "stop_time": "2026-11-18T17:54:45.432818+00:00",
     "duration_minutes": 107,
     "status": "completed"
+  },
+  {
+    "id": 398,
+    "start_time": "2026-11-19T03:56:58.528251+00:00",
+    "stop_time": null,
+    "duration_minutes": null,
+    "status": "running"
   }
 ]

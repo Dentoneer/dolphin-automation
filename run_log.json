@@ -2823,8 +2823,8 @@
   {
     "id": 404,
     "start_time": "2026-11-21T15:03:32.697779+00:00",
-    "stop_time": null,
-    "duration_minutes": null,
-    "status": "running"
+    "stop_time": "2026-11-21T16:41:56.131756+00:00",
+    "duration_minutes": 98,
+    "status": "completed"
   }
 ]
